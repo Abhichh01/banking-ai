@@ -308,4 +308,20 @@ def create_error_response(
 
 
 # Import datetime for the utility function
-from datetime import datetime 
+from datetime import datetime
+
+
+class BehavioralAnalysisError(BankingAIException):
+    """Exception raised for errors during behavioral analysis."""
+    
+    def __init__(self, message: str, user_id: Optional[int] = None):
+        self.user_id = user_id
+        super().__init__(message, error_code="BEHAVIORAL_ANALYSIS_ERROR", details={"user_id": user_id})
+
+
+class PatternDetectionError(BankingAIException):
+    """Exception raised for errors during pattern detection."""
+    
+    def __init__(self, message: str, user_id: Optional[int] = None):
+        self.user_id = user_id
+        super().__init__(message, error_code="PATTERN_DETECTION_ERROR", details={"user_id": user_id})

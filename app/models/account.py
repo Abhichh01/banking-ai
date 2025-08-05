@@ -246,7 +246,8 @@ class Account(ModelBase):
         CheckConstraint(
             "closed_date IS NULL OR status IN ('closed', 'charged_off', 'rejected')",
             name="check_closed_status"
-        )
+        ),
+        {'extend_existing': True}
     )
     
     # ===== Account Identification =====

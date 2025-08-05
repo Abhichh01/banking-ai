@@ -424,7 +424,7 @@ class AccountCreate(AccountBase):
         return values
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "account_type": "savings",
                 "display_name": "My Savings Account",
@@ -528,7 +528,7 @@ class AccountUpdate(BaseModel):
         return values
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "display_name": "Updated Savings Account",
                 "is_primary": True,
@@ -588,7 +588,7 @@ class AccountInDBBase(AccountBase, IDSchemaMixin, TimestampMixin):
     )
     
     class Config:
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             Decimal: lambda v: str(v.quantize(Decimal('0.01'))),
             datetime: lambda v: v.isoformat() if v else None
@@ -674,7 +674,7 @@ class Account(AccountInDBBase):
         return delta.days if delta.days > 0 else 0
     
     class Config(AccountInDBBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": 1,
                 "account_number": "1234567890",
@@ -931,7 +931,7 @@ class CardCreate(CardBase):
         return values
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "card_holder_name": "JOHN DOE",
                 "expiry_month": 12,
@@ -1025,7 +1025,7 @@ class CardUpdate(BaseModel):
         return self
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "status": "active",
                 "daily_limit": 7500.00,
@@ -1086,7 +1086,7 @@ class CardInDBBase(CardBase, IDSchemaMixin, TimestampMixin):
     )
     
     class Config:
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             datetime: lambda v: v.isoformat() if v else None,
             date: lambda v: v.isoformat() if v else None
@@ -1183,7 +1183,7 @@ class Card(CardInDBBase):
         return delta.days if delta.days > 0 else 0
     
     class Config(CardInDBBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": 1,
                 "masked_number": "411111******1111",

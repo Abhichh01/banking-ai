@@ -259,7 +259,7 @@ class TransactionCreate(TransactionBase):
         return v
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "account_id": 1,
                 "amount": -1500.50,  # Negative for debit
@@ -319,7 +319,7 @@ class TransactionUpdate(BaseModel):
     )
     
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True
         
     @validator('metadata_', pre=True)
     def ensure_metadata_dict(cls, v):
@@ -404,8 +404,8 @@ class TransactionInDBBase(TransactionBase, IDSchemaMixin, TimestampMixin):
     )
     
     class Config:
-        orm_mode = True
-        allow_population_by_field_name = True
+        from_attributes = True
+        validate_by_name = True
         json_encoders = {
             datetime: lambda v: v.isoformat(),
             Decimal: lambda v: str(v.quantize(Decimal('0.01')))
@@ -590,7 +590,7 @@ class MerchantBase(BaseModel):
         return v
     
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True
         json_encoders = {
             # Add any custom JSON encoders if needed
         }
@@ -633,7 +633,7 @@ class MerchantCreate(MerchantBase):
         return v
     
     class Config(MerchantBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "Acme Corp",
                 "merchant_id": "ACME123456",
@@ -720,7 +720,7 @@ class MerchantUpdate(BaseModel):
         return v or {}
     
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True
 
 class MerchantInDBBase(MerchantBase, IDSchemaMixin, TimestampMixin):
     """Base model for merchant data stored in the database."""
@@ -731,7 +731,7 @@ class MerchantInDBBase(MerchantBase, IDSchemaMixin, TimestampMixin):
     )
     
     class Config(MerchantBase.Config):
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             **MerchantBase.Config.json_encoders,
             # Add any additional encoders for database-specific fields
@@ -814,7 +814,7 @@ class MerchantResponse(BaseModel):
         json_encoders = {
             **Merchant.Config.json_encoders
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "success": True,
                 "data": {
@@ -863,7 +863,7 @@ class MerchantListResponse(BaseModel):
         json_encoders = {
             **Merchant.Config.json_encoders
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "success": True,
                 "data": [
@@ -943,7 +943,7 @@ class MerchantFilter(BaseModel):
     )
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "category": "retail",
                 "is_online": True,

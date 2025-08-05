@@ -66,6 +66,7 @@ class BehavioralPattern(ModelBase):
         Index('idx_analysis_period', 'analysis_period_start', 'analysis_period_end'),
         Index('idx_confidence_score', 'confidence_score'),
         Index('idx_next_analysis', 'next_analysis_date'),
+        {'extend_existing': True}
     )
     
     def __repr__(self) -> str:

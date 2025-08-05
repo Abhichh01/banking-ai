@@ -40,7 +40,6 @@ from app.core.exceptions import (
     FraudDetectionError,
     AIAnalysisError
 )
-from app.core.utils import generate_reference_id
 from app.core.llm_orchestrator import TaskType, TaskComplexity
 
 logger = logging.getLogger(__name__)
@@ -196,9 +195,9 @@ class EnhancedTransactionRepository(AIEnhancedRepository[Transaction, Transactio
     ) -> Transaction:
         """Create a new transaction with AI analysis and fraud detection."""
         try:
-            # Generate reference ID if not provided
-            if not obj_in.reference_id:
-                obj_in.reference_id = generate_reference_id()
+            # For MVP, do not auto-generate reference IDs
+            # if not obj_in.reference_id:
+            #     obj_in.reference_id = generate_reference_id()
             
             # Validate account balance
             await self._validate_account_balance(obj_in)
@@ -890,4 +889,4 @@ class EnhancedTransactionRepository(AIEnhancedRepository[Transaction, Transactio
             
         except Exception as e:
             logger.error(f"Failed to calculate risk indicators: {str(e)}")
-            raise 
+            raise

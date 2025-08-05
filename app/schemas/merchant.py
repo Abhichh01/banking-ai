@@ -65,7 +65,7 @@ class MerchantBase(BaseModel):
     tax_id: Optional[str] = Field(None, max_length=100, description="Tax identification number")
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "Example Merchant Inc.",
                 "category": "retail",
@@ -124,7 +124,7 @@ class MerchantUpdate(BaseModel):
     risk_score: Optional[float] = Field(None, ge=0, le=1)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "Updated Merchant Name",
                 "category": "retail",
@@ -144,7 +144,7 @@ class MerchantInDBBase(MerchantBase):
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional merchant metadata")
     
     class Config:
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             datetime: lambda v: v.isoformat(),
         }
@@ -197,7 +197,7 @@ class MerchantSearchFilter(BaseModel):
     created_before: Optional[datetime] = Field(None, description="Filter merchants created before this date")
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "category": "retail",
                 "status": "active",

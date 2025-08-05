@@ -81,6 +81,7 @@ class Merchant(ModelBase):
         Index('idx_merchant_risk', 'risk_score'),
         Index('idx_merchant_status', 'status'),
         Index('idx_merchant_mcc', 'mcc_code'),
+        {'extend_existing': True}
     )
     
     def __repr__(self) -> str:

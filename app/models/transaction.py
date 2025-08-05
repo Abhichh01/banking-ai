@@ -119,6 +119,7 @@ class Transaction(ModelBase):
         Index('idx_transaction_reference', 'reference_id', unique=True),
         Index('idx_transaction_type_status', 'transaction_type', 'status'),
         Index('idx_transaction_category', 'category'),
+        {'extend_existing': True}
     )
     
     @property

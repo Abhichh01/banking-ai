@@ -115,7 +115,7 @@ class BranchUpdate(BaseModel):
 # Properties shared by models stored in DB
 class BranchInDBBase(BranchBase, IDSchemaMixin, TimestampMixin):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Properties to return to client
 class Branch(BranchInDBBase):
@@ -178,7 +178,7 @@ class EmployeeInDBBase(EmployeeBase, IDSchemaMixin, TimestampMixin):
     user_id: Optional[int] = None
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Employee(EmployeeInDBBase):
     full_name: str
@@ -241,4 +241,4 @@ class BranchMetrics(BaseModel):
     transactions_this_month: int
     
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -89,6 +89,7 @@ class Branch(ModelBase):
         Index('idx_branch_location', 'city', 'state'),
         Index('idx_branch_code', 'branch_code', unique=True),
         Index('idx_branch_ifsc', 'ifsc_code', unique=True),
+        {'extend_existing': True}
     )
     
     @property

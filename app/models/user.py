@@ -528,7 +528,8 @@ class User(ModelBase):
         CheckConstraint(
             "(deleted_at IS NULL) OR (deleted_at IS NOT NULL AND deleted_by IS NOT NULL)",
             name='deletion_requires_deleted_by'
-        )
+        ),
+        {'extend_existing': True}
     )
 
     @property

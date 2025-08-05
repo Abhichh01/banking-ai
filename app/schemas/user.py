@@ -384,7 +384,7 @@ class UserUpdate(BaseModel):
     )
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "first_name": "John",
                 "last_name": "Doe",
@@ -451,7 +451,7 @@ class UserInDBBase(UserBase, IDSchemaMixin, TimestampMixin):
     version_id: int = Field(0, description="Version number for optimistic concurrency control")
     
     class Config:
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             datetime: lambda v: v.isoformat() if v else None
         }
@@ -467,7 +467,7 @@ class User(UserInDBBase):
     security_questions: Optional[Dict[str, Any]] = Field(None, exclude=True)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": 1,
                 "customer_number": "CUST123456",
@@ -536,7 +536,7 @@ class UserInDB(UserInDBBase):
     )
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Session schemas
 class SessionBase(BaseModel):
@@ -553,7 +553,7 @@ class SessionInDBBase(SessionBase, IDSchemaMixin, TimestampMixin):
     user_id: int
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Session(SessionInDBBase):
     pass

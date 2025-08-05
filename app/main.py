@@ -11,13 +11,9 @@ from datetime import datetime
 
 from fastapi import FastAPI, Request, status, HTTPException, Depends, BackgroundTasks
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, Response
-from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
+from fastapi.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.staticfiles import StaticFiles
 import uvicorn
-from pydantic import BaseModel, Field, AnyHttpUrl
 
 from app.api.v1.api import api_router
 from app.api.v1.dependencies import (
@@ -30,11 +26,9 @@ from app.core.llm_orchestrator import LLMOrchestrator
 from app.core.memory_manager import MemoryManager
 from app.db.database import Database
 from app.schemas.response import (
-    ErrorResponse,
     ErrorCode,
     StandardResponse,
-    HealthCheckResponse,
-    ErrorResponseEnvelope
+    HealthCheckResponse
 )
 from app.schemas.token import Token, TokenData
 

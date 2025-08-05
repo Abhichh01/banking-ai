@@ -5,7 +5,7 @@ from datetime import datetime, date, timedelta
 from decimal import Decimal
 from enum import Enum
 from typing import Optional, List, Dict, Any, Union, Literal
-from pydantic import BaseModel, Field, field_validator, model_validator, validator, HttpUrl, condecimal
+from pydantic import BaseModel, Field, field_validator, model_validator, HttpUrl, condecimal
 
 from app.models.ai_models import BehavioralPatternType, RecommendationStatus, RecommendationType
 
@@ -154,11 +154,11 @@ class FraudAlertBase(BaseModel):
     )
     
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True
         json_encoders = {
             datetime: lambda v: v.isoformat(),
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "alert_type": "unusual_transaction",
                 "description": "Unusually large transaction detected compared to spending patterns",
@@ -197,7 +197,7 @@ class FraudAlertCreate(FraudAlertBase):
             raise ValueError(f"Severity must be one of: {', '.join([s.value for s in AlertSeverity])}")
         return v
     
-    @validator('status')
+    @field_validator('status')
     def validate_initial_status(cls, v):
         """Ensure new alerts start with a valid initial status."""
         if v != 'open':
@@ -205,9 +205,9 @@ class FraudAlertCreate(FraudAlertBase):
         return v
     
     class Config(FraudAlertBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **FraudAlertBase.Config.schema_extra["example"],
+                **FraudAlertBase.Config.json_schema_extra["example"],
                 "alert_type": "unusual_transaction",
                 "status": "open"
             }
@@ -247,19 +247,19 @@ class FraudAlertUpdate(BaseModel):
         description="Updated confidence score (0-1)"
     )
     
-    @validator('status')
-    def validate_status_transition(cls, v, values, **kwargs):
+    @field_validator('status')
+    def validate_status_transition(cls, v):
         """Validate status transitions follow allowed workflow."""
         if v is not None and v not in [s.value for s in AlertStatus]:
             raise ValueError(f"Status must be one of: {', '.join([s.value for s in AlertStatus])}")
         return v
     
-    @model_validator
-    def validate_resolution_fields(cls, values):
+    @model_validator(mode='after')
+    def validate_resolution_fields(self):
         """Validate that resolution fields are provided when resolving an alert."""
-        status = values.get('status')
-        resolved_by = values.get('resolved_by')
-        resolution_notes = values.get('resolution_notes')
+        status = self.status
+        resolved_by = self.resolved_by
+        resolution_notes = self.resolution_notes
 
         if status in ['resolved', 'false_positive']:
             if not resolved_by:
@@ -267,14 +267,14 @@ class FraudAlertUpdate(BaseModel):
             if not resolution_notes:
                 raise ValueError("resolution_notes are required when resolving an alert")
 
-        return values
+        return self
     
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True
         json_encoders = {
             datetime: lambda v: v.isoformat(),
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "status": "resolved",
                 "severity": "high",
@@ -308,13 +308,13 @@ class FraudAlertInDBBase(FraudAlertBase, IDSchemaMixin, TimestampMixin):
     )
     
     class Config(FraudAlertBase.Config):
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             **FraudAlertBase.Config.json_encoders,
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **FraudAlertBase.Config.schema_extra["example"],
+                **FraudAlertBase.Config.json_schema_extra["example"],
                 "id": 1,
                 "created_at": "2023-06-15T14:30:00Z",
                 "updated_at": "2023-06-16T09:15:00Z",
@@ -358,9 +358,9 @@ class FraudAlert(FraudAlertInDBBase):
         return 'low'
     
     class Config(FraudAlertInDBBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **FraudAlertInDBBase.Config.schema_extra["example"],
+                **FraudAlertInDBBase.Config.json_schema_extra["example"],
                 "is_resolved": False,
                 "requires_immediate_attention": True,
                 "time_to_resolution": None,
@@ -418,11 +418,11 @@ class AIRecommendationBase(BaseModel):
     )
     
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True
         json_encoders = {
             datetime: lambda v: v.isoformat(),
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "title": "Increase emergency fund",
                 "description": "Based on your spending patterns, we recommend...",
@@ -444,7 +444,7 @@ class AIRecommendationCreate(AIRecommendationBase):
     
     Extends the base schema with validation specific to new recommendations.
     """
-    @validator('recommendation_type')
+    @field_validator('recommendation_type')
     def validate_recommendation_type(cls, v):
         """Validate that recommendation type is one of the allowed values."""
         allowed_types = [t.value for t in RecommendationType]
@@ -452,7 +452,7 @@ class AIRecommendationCreate(AIRecommendationBase):
             raise ValueError(f"Recommendation type must be one of: {', '.join(allowed_types)}")
         return v
     
-    @validator('status')
+    @field_validator('status')
     def validate_initial_status(cls, v):
         """Ensure new recommendations start with a valid initial status."""
         valid_initial = ['pending', 'active']
@@ -461,9 +461,9 @@ class AIRecommendationCreate(AIRecommendationBase):
         return v
     
     class Config(AIRecommendationBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **AIRecommendationBase.Config.schema_extra["example"],
+                **AIRecommendationBase.Config.json_schema_extra["example"],
                 "status": "pending"
             }
         }
@@ -512,11 +512,11 @@ class AIRecommendationUpdate(BaseModel):
         return v
     
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True
         json_encoders = {
             datetime: lambda v: v.isoformat(),
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "status": "accepted",
                 "user_feedback": "This was very helpful!",
@@ -534,13 +534,13 @@ class AIRecommendationInDBBase(AIRecommendationBase, IDSchemaMixin, TimestampMix
     Includes database-specific fields like IDs and timestamps.
     """
     class Config(AIRecommendationBase.Config):
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             **AIRecommendationBase.Config.json_encoders,
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **AIRecommendationBase.Config.schema_extra["example"],
+                **AIRecommendationBase.Config.json_schema_extra["example"],
                 "id": 1,
                 "created_at": "2023-06-15T14:30:00Z",
                 "updated_at": "2023-06-16T09:15:00Z"
@@ -574,9 +574,9 @@ class AIRecommendation(AIRecommendationInDBBase):
         return "low"
     
     class Config(AIRecommendationInDBBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **AIRecommendationInDBBase.Config.schema_extra["example"],
+                **AIRecommendationInDBBase.Config.json_schema_extra["example"],
                 "is_expired": False,
                 "is_actionable": True,
                 "priority_level": "high"
@@ -628,11 +628,11 @@ class BehavioralPatternBase(BaseModel):
     )
     
     class Config:
-        allow_population_by_field_name = True
+        validate_by_name = True
         json_encoders = {
             datetime: lambda v: v.isoformat(),
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "pattern_type": "spending_habit",
                 "description": "Monthly subscription spending pattern detected",
@@ -649,7 +649,7 @@ class BehavioralPatternBase(BaseModel):
 class BehavioralPatternCreate(BehavioralPatternBase):
     """Schema for creating a new behavioral pattern record."""
     
-    @validator('pattern_type')
+    @field_validator('pattern_type')
     def validate_pattern_type(cls, v):
         """Validate that pattern type is one of the allowed values."""
         allowed_types = [t.value for t in BehavioralPatternType]
@@ -658,9 +658,9 @@ class BehavioralPatternCreate(BehavioralPatternBase):
         return v
     
     class Config(BehavioralPatternBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **BehavioralPatternBase.Config.schema_extra["example"],
+                **BehavioralPatternBase.Config.json_schema_extra["example"],
                 "detected_at": "2023-06-15T14:30:00Z"
             }
         }
@@ -684,8 +684,8 @@ class BehavioralPatternUpdate(BaseModel):
     )
     
     class Config:
-        allow_population_by_field_name = True
-        schema_extra = {
+        validate_by_name = True
+        json_schema_extra = {
             "example": {
                 "confidence_score": 0.92,
                 "is_active": True,
@@ -700,13 +700,13 @@ class BehavioralPatternInDBBase(BehavioralPatternBase, IDSchemaMixin, TimestampM
     """Base model for database-persisted behavioral patterns."""
     
     class Config(BehavioralPatternBase.Config):
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             **BehavioralPatternBase.Config.json_encoders,
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **BehavioralPatternBase.Config.schema_extra["example"],
+                **BehavioralPatternBase.Config.json_schema_extra["example"],
                 "id": 1,
                 "created_at": "2023-06-15T14:30:00Z",
                 "updated_at": "2023-06-16T09:15:00Z"
@@ -727,9 +727,9 @@ class BehavioralPattern(BehavioralPatternInDBBase):
         return (datetime.utcnow() - self.detected_at).days <= 30
     
     class Config(BehavioralPatternInDBBase.Config):
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                **BehavioralPatternInDBBase.Config.schema_extra["example"],
+                **BehavioralPatternInDBBase.Config.json_schema_extra["example"],
                 "is_high_confidence": True,
                 "is_recent": True
             }
@@ -757,7 +757,7 @@ class ModelTrainingUpdate(BaseModel):
 
 class ModelTrainingInDBBase(ModelTrainingBase, IDSchemaMixin, TimestampMixin):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ModelTraining(ModelTrainingInDBBase):
     pass
@@ -885,8 +885,8 @@ class FraudAlertFilter(PaginationSchema):
         description="Filter by risk level (extreme/high/medium/low)"
     )
     
-    @validator('alert_type', 'status', 'severity', 'user_id', 'account_id', 'transaction_id', 'risk_level')
-    def convert_single_to_list(cls, v, field):
+    @field_validator('alert_type', 'status', 'severity', 'user_id', 'account_id', 'transaction_id', 'risk_level')
+    def convert_single_to_list(cls, v, info):
         """Convert single values to single-item lists for consistent filtering."""
         if v is None:
             return None
@@ -894,7 +894,7 @@ class FraudAlertFilter(PaginationSchema):
             return list(v)
         return [v]
     
-    @validator('risk_level')
+    @field_validator('risk_level')
     def validate_risk_level(cls, v):
         """Validate risk level values."""
         if v is None:
@@ -907,7 +907,7 @@ class FraudAlertFilter(PaginationSchema):
         return v
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "alert_type": ["unusual_transaction", "account_takeover"],
                 "status": ["open", "investigating"],
@@ -973,14 +973,14 @@ class AIRecommendationFilter(PaginationSchema):
         description="Filter by whether feedback has been provided"
     )
     
-    @validator('status')
+    @field_validator('status')
     def validate_status(cls, v):
         """Validate status against allowed values if provided."""
         if v is not None and v not in [s.value for s in RecommendationStatus]:
             raise ValueError(f"Status must be one of: {', '.join([s.value for s in RecommendationStatus])}")
         return v
     
-    @validator('priority')
+    @field_validator('priority')
     def validate_priority(cls, v):
         """Validate priority level if provided."""
         if v is not None and v not in ["critical", "high", "medium", "low"]:
@@ -988,7 +988,7 @@ class AIRecommendationFilter(PaginationSchema):
         return v
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "recommendation_type": "savings_goal",
                 "status": "pending",
@@ -1051,7 +1051,7 @@ class BehavioralPatternFilter(PaginationSchema):
     )
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "pattern_type": "spending_habit",
                 "min_confidence": 0.7,

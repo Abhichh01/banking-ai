@@ -8,14 +8,14 @@ from datetime import datetime, timedelta, date
 from typing import Any, Dict, List, Optional, Union
 from uuid import UUID
 
-from sqlalchemy import and_, select, func, text, desc
+from sqlalchemy import and_, or_, select, func, text, desc
 from sqlalchemy.orm import selectinload
 
 from app.models.ai_recommendation import AIRecommendation, RecommendationType, RecommendationStatus, RecommendationPriority
 from app.schemas.ai import AIRecommendationCreate, AIRecommendationUpdate
 from app.repositories.enhanced_base import AIEnhancedRepository
 from app.core.llm_orchestrator import TaskType, TaskComplexity
-from app.core.exceptions import RecommendationError, PersonalizationError
+from app.core.exceptions import RecommendationError
 
 logger = logging.getLogger(__name__)
 
@@ -239,7 +239,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"User preference analysis failed: {str(e)}")
-            raise PersonalizationError(f"User preference analysis failed: {str(e)}")
+            raise RecommendationError(f"User preference analysis failed: {str(e)}")
 
     async def get_recommendation_trends(
         self,

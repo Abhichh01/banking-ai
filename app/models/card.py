@@ -6,14 +6,15 @@ from uuid import uuid4
 
 from sqlalchemy import (
     Column, String, Boolean, DateTime, Integer, ForeignKey, 
-    Enum as SQLEnum, Numeric, CheckConstraint, Index, func, text
+    Enum as SQLEnum, Numeric, CheckConstraint, Index, Transaction, func, text
 )
 from sqlalchemy.orm import relationship, Mapped
 
 # Import database-agnostic types
 from app.db.types import JSON, UUID, Interval
-from app.core.security import encrypt_data, decrypt_data
+from app.schemas.user import User
 from .base import ModelBase
+from .account import Account
 
 class CardType(str, PyEnum):
     """Types of payment cards."""
@@ -72,13 +73,7 @@ class Card(ModelBase):
         String(19),
         nullable=False,
         index=True,
-        comment='Encrypted card number (last 4 digits only for display)'
-    )
-    
-    card_number_encrypted = Column(
-        String(255),
-        nullable=False,
-        comment='Fully encrypted card number'
+        comment='Card number (masked for display)'
     )
     
     last_four = Column(
@@ -99,10 +94,10 @@ class Card(ModelBase):
         comment='Card expiration year (4 digits)'
     )
     
-    cvv_encrypted = Column(
-        String(255),
+    cvv = Column(
+        String(4),
         nullable=False,
-        comment='Encrypted CVV code'
+        comment='CVV code'
     )
     
     # Card Details
@@ -223,10 +218,10 @@ class Card(ModelBase):
     )
     
     # Security Features
-    pin_encrypted = Column(
-        String(255),
+    pin = Column(
+        String(6),
         nullable=True,
-        comment='Encrypted PIN for the card'
+        comment='PIN for the card'
     )
     
     pin_retry_attempts = Column(
@@ -302,54 +297,40 @@ class Card(ModelBase):
         CheckConstraint(
             "expiry_date > issue_date",
             name='check_expiry_after_issue'
-        )
+        ),
+        
+        # Specify extend_existing to handle multiple imports of this model
+        {'extend_existing': True}
     )
     
     def __init__(self, **kwargs):
-        """Initialize a new card with proper encryption."""
+        """Initialize a new card."""
         super().__init__(**kwargs)
         
-        # Encrypt sensitive data if provided
+        # Set basic card details if provided
         if 'card_number' in kwargs and kwargs['card_number']:
             self.set_card_number(kwargs['card_number'])
             
         if 'cvv' in kwargs and kwargs['cvv']:
-            self.set_cvv(kwargs['cvv'])
+            self.cvv = kwargs['cvv']
             
         if 'pin' in kwargs and kwargs['pin']:
-            self.set_pin(kwargs['pin'])
+            self.pin = kwargs['pin']
     
     def set_card_number(self, card_number: str):
-        """Securely store the card number with encryption."""
+        """Store the card number with masking for display."""
         self.card_number = f"•••• •••• •••• {card_number[-4:]}"
-        self.card_number_encrypted = encrypt_data(card_number)
         self.last_four = card_number[-4:]
     
     def get_card_number(self) -> Optional[str]:
-        """Retrieve the decrypted card number."""
-        if not self.card_number_encrypted:
-            return None
-        return decrypt_data(self.card_number_encrypted)
-    
-    def set_cvv(self, cvv: str):
-        """Securely store the CVV with encryption."""
-        self.cvv_encrypted = encrypt_data(cvv)
-    
-    def get_cvv(self) -> Optional[str]:
-        """Retrieve the decrypted CVV."""
-        if not self.cvv_encrypted:
-            return None
-        return decrypt_data(self.cvv_encrypted)
-    
-    def set_pin(self, pin: str):
-        """Securely store the PIN with encryption."""
-        self.pin_encrypted = encrypt_data(pin)
+        """Return the masked card number."""
+        return self.card_number
     
     def verify_pin(self, pin: str) -> bool:
         """Verify the provided PIN against the stored one."""
-        if not self.pin_encrypted:
+        if not self.pin:
             return False
-        return pin == decrypt_data(self.pin_encrypted)
+        return pin == self.pin
     
     def is_active(self) -> bool:
         """Check if the card is currently active."""

@@ -20,7 +20,6 @@ from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.sql import func, and_, or_
 
-from app.core.security import encrypt_data, decrypt_data
 from .base import ModelBase
 
 class FraudAlertType(str, Enum):
@@ -208,6 +207,7 @@ class FraudAlert(ModelBase):
         Index('idx_alert_risk_severity', 'risk_score', 'severity'),
         Index('idx_alert_created', 'created_at'),
         Index('idx_alert_reference', 'alert_reference', unique=True),
+        {'extend_existing': True}
     )
     
     def __repr__(self) -> str:

@@ -92,6 +92,7 @@ class AIRecommendation(ModelBase):
         Index('idx_confidence_score', 'confidence_score'),
         Index('idx_expiry_date', 'expiry_date'),
         Index('idx_priority', 'priority'),
+        {'extend_existing': True}
     )
     
     def __repr__(self) -> str:

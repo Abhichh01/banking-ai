@@ -49,6 +49,10 @@ class LLMOrchestrator:
     Intelligent LLM orchestrator that selects optimal models based on task requirements.
     Implements fallback mechanisms, performance tracking, and cost optimization.
     """
+    @classmethod
+    async def create(cls):
+        """Async constructor for compatibility with FastAPI startup."""
+        return cls()
     
     def __init__(self):
         """Initialize the LLM orchestrator with model configurations."""

@@ -27,6 +27,11 @@ class MemoryManager:
     related to customer interactions and transactions.
     """
     
+    @classmethod
+    async def create(cls):
+        """Async constructor for compatibility with FastAPI startup."""
+        return cls()
+    
     def __init__(self):
         """Initialize the memory manager."""
         # In a real implementation, this would initialize a Cosmos DB client

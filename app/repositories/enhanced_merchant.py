@@ -112,8 +112,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
         try:
             merchant = await self.get_by_id(merchant_id)
             if not merchant:
-                logger.error(f"Error: {{f"Merchant {merchant_id} not found"}}")
-        return None # dict # list
+                return {}
 
             # Get merchant transaction data
             transaction_data = await self._get_merchant_transaction_data(merchant_id)
@@ -147,8 +146,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
 
         except Exception as e:
             logger.error(f"Merchant risk analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Merchant risk analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def analyze_merchant_transactions(
         self,
@@ -159,12 +157,11 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
         try:
             merchant = await self.get_by_id(merchant_id)
             if not merchant:
-                logger.error(f"Error: {{f"Merchant {merchant_id} not found"}}")
-        return None
+                logger.error(f"Merchant {merchant_id} not found")
+                return {}
 
             # Get merchant transaction data
             transaction_data = await self._get_merchant_transaction_data(merchant_id, time_range)
-
             # Analyze transaction patterns with AI
             transaction_analysis = await self.analyze_with_ai(
                 {
@@ -184,8 +181,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
 
         except Exception as e:
             logger.error(f"Merchant transaction analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Merchant transaction analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def get_high_risk_merchants(
         self,
@@ -208,8 +204,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
 
         except Exception as e:
             logger.error(f"Failed to get high-risk merchants: {str(e)}")
-            logger.error(f"Error: {{f"Failed to get high-risk merchants: {str(e}}")
-        return None
+            return []
 
     async def analyze_merchant_category_trends(
         self,
@@ -247,8 +242,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
 
         except Exception as e:
             logger.error(f"Merchant category trend analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Merchant category trend analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def detect_merchant_anomalies(
         self,
@@ -279,8 +273,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
 
         except Exception as e:
             logger.error(f"Merchant anomaly detection failed: {str(e)}")
-            logger.error(f"Error: {{f"Merchant anomaly detection failed: {str(e}}")
-        return None
+            return []
 
     async def get_merchant_performance_metrics(
         self,
@@ -291,8 +284,8 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
         try:
             merchant = await self.get_by_id(merchant_id)
             if not merchant:
-                logger.error(f"Error: {{f"Merchant {merchant_id} not found"}}")
-        return None
+                logger.error(f"Merchant {merchant_id} not found")
+                return {}
 
             # Get merchant transaction data
             transaction_data = await self._get_merchant_transaction_data(merchant_id, time_range)
@@ -324,8 +317,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
 
         except Exception as e:
             logger.error(f"Merchant performance analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Merchant performance analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def bulk_update_merchant_risk(
         self,
@@ -362,8 +354,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
 
         except Exception as e:
             logger.error(f"Bulk merchant risk update failed: {str(e)}")
-            logger.error(f"Error: {{f"Bulk merchant risk update failed: {str(e}}")
-        return None
+            return 0
 
     async def get_merchant_statistics(
         self,
@@ -404,8 +395,7 @@ class EnhancedMerchantRepository(AIEnhancedRepository[Merchant, MerchantCreate, 
 
         except Exception as e:
             logger.error(f"Failed to get merchant statistics: {str(e)}")
-            logger.error(f"Error: {{f"Failed to get merchant statistics: {str(e}}")
-        return None
+            return {}
 
     # ==================== Abstract Method Implementations ====================
 

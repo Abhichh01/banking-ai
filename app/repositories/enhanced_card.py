@@ -106,8 +106,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
         try:
             card = await self.get_by_id(card_id)
             if not card:
-                logger.error(f"Error: {{f"Card {card_id} not found"}}")
-        return None # dict # list
+                logger.error(f"Card {card_id} not found")
+                return {}
 
             # Get card usage data
             card_data = await self._get_card_security_data(card_id)
@@ -127,8 +127,7 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card security analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Card security analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def detect_card_fraud(
         self,
@@ -168,8 +167,7 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card fraud detection failed: {str(e)}")
-            logger.error(f"Error: {{f"Card fraud detection failed: {str(e}}")
-        return None
+            return {}
 
     async def analyze_card_usage_patterns(
         self,
@@ -196,8 +194,7 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card usage pattern analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Card usage pattern analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def get_card_recommendations(
         self,
@@ -224,8 +221,7 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card recommendations failed: {str(e)}")
-            logger.error(f"Error: {{f"Card recommendations failed: {str(e}}")
-        return None
+            return {}
 
     async def monitor_card_security(
         self,
@@ -235,8 +231,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
         try:
             card = await self.get_by_id(card_id)
             if not card:
-                logger.error(f"Error: {{f"Card {card_id} not found"}}")
-        return None
+                logger.error(f"Card {card_id} not found")
+                return {}
 
             # Get security monitoring data
             security_data = await self._get_card_security_monitoring_data(card_id)
@@ -268,8 +264,7 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card security monitoring failed: {str(e)}")
-            logger.error(f"Error: {{f"Card security monitoring failed: {str(e}}")
-        return None
+            return {}
 
     async def bulk_update_card_status(
         self,
@@ -293,8 +288,7 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Bulk card status update failed: {str(e)}")
-            logger.error(f"Error: {{f"Bulk card status update failed: {str(e}}")
-        return None
+            return 0
 
     async def get_expiring_cards(
         self,
@@ -322,8 +316,7 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Failed to get expiring cards: {str(e)}")
-            logger.error(f"Error: {{f"Failed to get expiring cards: {str(e}}")
-        return None
+            return []
 
     async def get_suspicious_cards(
         self,
@@ -355,8 +348,7 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Failed to get suspicious cards: {str(e)}")
-            logger.error(f"Error: {{f"Failed to get suspicious cards: {str(e}}")
-        return None
+            return []
 
     # ==================== Abstract Method Implementations ====================
 

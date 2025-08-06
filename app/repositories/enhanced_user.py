@@ -195,8 +195,7 @@ class EnhancedUserRepository(AIEnhancedRepository[User, UserCreate, UserUpdate])
 
         except Exception as e:
             logger.error(f"User behavior analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"User behavior analysis failed: {str(e}}")
-        return {}
+            return {}
 
     async def assess_user_risk(
         self,
@@ -215,8 +214,7 @@ class EnhancedUserRepository(AIEnhancedRepository[User, UserCreate, UserUpdate])
 
         except Exception as e:
             logger.error(f"User risk assessment failed: {str(e)}")
-            logger.error(f"Error: {{f"User risk assessment failed: {str(e}}")
-        return None
+            return {}
 
     async def generate_user_recommendations(
         self,
@@ -239,8 +237,7 @@ class EnhancedUserRepository(AIEnhancedRepository[User, UserCreate, UserUpdate])
 
         except Exception as e:
             logger.error(f"User recommendation generation failed: {str(e)}")
-            logger.error(f"Error: {{f"User recommendation generation failed: {str(e}}")
-        return None
+            return {}
 
     # ==================== Advanced Analytics Methods ====================
 
@@ -261,8 +258,8 @@ class EnhancedUserRepository(AIEnhancedRepository[User, UserCreate, UserUpdate])
             # Get user profile
             user = await self.get_by_id(user_id)
             if not user:
-                logger.error(f"Error: {{f"User {user_id} not found"}}")
-        return None
+                logger.error(f"User {user_id} not found")
+                return {}
 
             # Get user transactions
             transactions = await self._get_user_transactions(user_id, time_range)
@@ -307,8 +304,7 @@ class EnhancedUserRepository(AIEnhancedRepository[User, UserCreate, UserUpdate])
 
         except Exception as e:
             logger.error(f"User analytics failed: {str(e)}")
-            logger.error(f"Error: {{f"User analytics failed: {str(e}}")
-        return None
+            return {}
 
     async def get_customer_segmentation(
         self,
@@ -331,8 +327,7 @@ class EnhancedUserRepository(AIEnhancedRepository[User, UserCreate, UserUpdate])
 
         except Exception as e:
             logger.error(f"Customer segmentation failed: {str(e)}")
-            logger.error(f"Error: {{f"Customer segmentation failed: {str(e}}")
-        return None
+            return {}
 
     # ==================== Implementation of Abstract Methods ====================
 
@@ -347,8 +342,8 @@ class EnhancedUserRepository(AIEnhancedRepository[User, UserCreate, UserUpdate])
             # Get user profile
             user = await self.get_by_id(user_id)
             if not user:
-                logger.error(f"Error: {{f"User {user_id} not found"}}")
-        return None # dict
+                logger.error(f"User {user_id} not found")
+                return {}
 
             # Get user transactions
             transactions = await self._get_user_transactions(user_id, time_range or "30d")
@@ -420,8 +415,8 @@ class EnhancedUserRepository(AIEnhancedRepository[User, UserCreate, UserUpdate])
             # Get user profile
             user = await self.get_by_id(user_id)
             if not user:
-                logger.error(f"Error: {{f"User {user_id} not found"}}")
-        return None # dict
+                logger.error(f"User {user_id} not found")
+                return {}
 
             # Get recent transactions
             recent_transactions = await self._get_user_transactions(user_id, "30d")

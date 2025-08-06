@@ -122,8 +122,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Personalized recommendation generation failed: {str(e)}")
-            logger.error(f"Error: {{f"Personalized recommendation generation failed: {str(e}}")
-        return {}
+            return []
 
     async def analyze_recommendation_performance(
         self,
@@ -172,8 +171,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Recommendation performance analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Recommendation performance analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def optimize_recommendations(
         self,
@@ -203,8 +201,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Recommendation optimization failed: {str(e)}")
-            logger.error(f"Error: {{f"Recommendation optimization failed: {str(e}}")
-        return None
+            return {}
 
     async def analyze_user_preferences(
         self,
@@ -241,8 +238,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"User preference analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"User preference analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def get_recommendation_trends(
         self,
@@ -282,8 +278,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Recommendation trend analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Recommendation trend analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def update_recommendation_feedback(
         self,
@@ -296,8 +291,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
         try:
             recommendation = await self.get_by_id(recommendation_id)
             if not recommendation:
-                logger.error(f"Error: {{f"Recommendation {recommendation_id} not found"}}")
-        return None
+                logger.error(f"Recommendation {recommendation_id} not found")
+                return None
 
             # Update feedback
             update_data = {
@@ -318,8 +313,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Recommendation feedback update failed: {str(e)}")
-            logger.error(f"Error: {{f"Recommendation feedback update failed: {str(e}}")
-        return None
+            return None
 
     async def get_high_priority_recommendations(
         self,
@@ -341,8 +335,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Failed to get high-priority recommendations: {str(e)}")
-            logger.error(f"Error: {{f"Failed to get high-priority recommendations: {str(e}}")
-        return None
+            return []
 
     async def bulk_update_recommendation_status(
         self,
@@ -374,8 +367,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Bulk recommendation status update failed: {str(e)}")
-            logger.error(f"Error: {{f"Bulk recommendation status update failed: {str(e}}")
-        return None
+            return 0
 
     async def get_expiring_recommendations(
         self,
@@ -401,8 +393,7 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Failed to get expiring recommendations: {str(e)}")
-            logger.error(f"Error: {{f"Failed to get expiring recommendations: {str(e}}")
-        return None
+            return []
 
     # ==================== Abstract Method Implementations ====================
 

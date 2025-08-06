@@ -238,8 +238,7 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"AI analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"AI analysis failed: {str(e}}")
-        return {}
+            return {}
 
     async def generate_insights(
         self, 
@@ -266,8 +265,7 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"Failed to generate insights: {str(e)}")
-            logger.error(f"Error: {{f"Failed to generate insights: {str(e}}")
-        return None
+            return {}
 
     async def detect_anomalies(
         self, 
@@ -291,8 +289,7 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"Anomaly detection failed: {str(e)}")
-            logger.error(f"Error: {{f"Anomaly detection failed: {str(e}}")
-        return None
+            return []
 
     # ==================== Advanced Analytics Methods ====================
     
@@ -342,8 +339,7 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"Behavioral analytics failed: {str(e)}")
-            logger.error(f"Error: {{f"Behavioral analytics failed: {str(e}}")
-        return None
+            return {}
 
     async def get_risk_assessment(
         self, 
@@ -388,8 +384,7 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"Risk assessment failed: {str(e)}")
-            logger.error(f"Error: {{f"Risk assessment failed: {str(e}}")
-        return None
+            return {}
 
     # ==================== Performance Optimization Methods ====================
     

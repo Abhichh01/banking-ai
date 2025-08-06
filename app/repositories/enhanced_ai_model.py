@@ -238,8 +238,7 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"Behavioral pattern analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Behavioral pattern analysis failed: {str(e}}")
-        return None
+            return {}
 
     # ==================== Advanced Analytics Methods ====================
 
@@ -291,8 +290,7 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"AI analytics failed: {str(e)}")
-            logger.error(f"Error: {{f"AI analytics failed: {str(e}}")
-        return None
+            return {}
 
     async def get_recommendation_performance(
         self,
@@ -316,8 +314,7 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"Recommendation performance analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Recommendation performance analysis failed: {str(e}}")
-        return None
+            return {}
 
     async def get_behavioral_insights(
         self,
@@ -345,8 +342,7 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"Behavioral insights analysis failed: {str(e)}")
-            logger.error(f"Error: {{f"Behavioral insights analysis failed: {str(e}}")
-        return None # dict}")
+            return {}
 
     # ==================== Implementation of Abstract Methods ====================
 

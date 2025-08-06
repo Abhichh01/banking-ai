@@ -3,14 +3,15 @@ Merchant model for managing merchant information and categories.
 """
 from datetime import datetime
 from typing import Optional, Dict, Any, List
-from sqlalchemy import Column, Integer, String, Text, JSON, ForeignKey, DateTime, Float, Enum, Index
+from sqlalchemy import Column, Integer, String, Text, JSON, ForeignKey, DateTime, Float, Enum, Index, Boolean
+from enum import Enum as PyEnum
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum, JSONB
 from sqlalchemy.sql import func
 
 from .base import ModelBase
 
-class MerchantCategory(str, Enum):
+class MerchantCategory(str, PyEnum):
     RETAIL = "retail"
     GROCERY = "grocery"
     RESTAURANT = "restaurant"
@@ -24,7 +25,7 @@ class MerchantCategory(str, Enum):
     GOVERNMENT = "government"
     OTHER = "other"
 
-class MerchantStatus(str, Enum):
+class MerchantStatus(str, PyEnum):
     ACTIVE = "active"
     INACTIVE = "inactive"
     SUSPENDED = "suspended"

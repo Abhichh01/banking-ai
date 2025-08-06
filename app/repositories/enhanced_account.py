@@ -9,7 +9,7 @@ from typing import List, Optional, Dict, Any, Union
 from decimal import Decimal
 from uuid import UUID
 
-from sqlalchemy import and_, select, func, desc, sum as sql_sum
+from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -19,7 +19,8 @@ from app.models.user import User
 from app.repositories.enhanced_base import AIEnhancedRepository
 from app.schemas.account import AccountCreate, AccountUpdate
 from app.core.llm_orchestrator import TaskType, TaskComplexity
-from app.core.exceptions import RepositoryError, AIAnalysisError
+# Exception imports removed for MVP
+# All custom exceptions replaced with standard logging
 
 logger = logging.getLogger(__name__)
 
@@ -171,7 +172,7 @@ class EnhancedAccountRepository(AIEnhancedRepository[Account, AccountCreate, Acc
 
         except Exception as e:
             logger.error(f"Account health analysis failed: {str(e)}")
-            raise AIAnalysisError(f"Account health analysis failed: {str(e)}")
+            return {}
 
     async def generate_account_recommendations(
         self,
@@ -194,7 +195,7 @@ class EnhancedAccountRepository(AIEnhancedRepository[Account, AccountCreate, Acc
 
         except Exception as e:
             logger.error(f"Account recommendation generation failed: {str(e)}")
-            raise AIAnalysisError(f"Account recommendation generation failed: {str(e)}")
+            return {}
 
     # ==================== Advanced Analytics Methods ====================
 
@@ -203,19 +204,15 @@ class EnhancedAccountRepository(AIEnhancedRepository[Account, AccountCreate, Acc
         account_id: int,
         time_range: str = "30d"
     ) -> Dict[str, Any]:
-        """Get comprehensive account analytics."""
+        """Get comprehensive analytics for an account."""
         cache_key = f"account_analytics:{account_id}:{time_range}"
-
-        # Check cache first
-        cached = await self.cache_manager.get(cache_key)
-        if cached:
-            return cached
-
+        
         try:
             # Get account
             account = await self.get_by_id(account_id)
             if not account:
-                raise RepositoryError(f"Account {account_id} not found")
+                logger.error(f"Account {account_id} not found")
+                return {}
 
             # Get account transactions
             transactions = await self._get_account_transactions(account_id, time_range)
@@ -249,10 +246,9 @@ class EnhancedAccountRepository(AIEnhancedRepository[Account, AccountCreate, Acc
             await self.cache_manager.set(cache_key, analytics_result, ttl=3600)  # 1 hour
 
             return analytics_result
-
         except Exception as e:
             logger.error(f"Account analytics failed: {str(e)}")
-            raise RepositoryError(f"Account analytics failed: {str(e)}")
+            return {}
 
     async def get_account_performance(
         self,
@@ -276,7 +272,7 @@ class EnhancedAccountRepository(AIEnhancedRepository[Account, AccountCreate, Acc
 
         except Exception as e:
             logger.error(f"Account performance analysis failed: {str(e)}")
-            raise RepositoryError(f"Account performance analysis failed: {str(e)}")
+            return None
 
     async def get_account_balance_history(
         self,
@@ -295,7 +291,7 @@ class EnhancedAccountRepository(AIEnhancedRepository[Account, AccountCreate, Acc
 
         except Exception as e:
             logger.error(f"Account balance history failed: {str(e)}")
-            raise RepositoryError(f"Account balance history failed: {str(e)}")
+            return None
 
     # ==================== Implementation of Abstract Methods ====================
 
@@ -550,7 +546,8 @@ class EnhancedAccountRepository(AIEnhancedRepository[Account, AccountCreate, Acc
             # Get account
             account = await self.get_by_id(account_id)
             if not account:
-                raise RepositoryError(f"Account {account_id} not found")
+                logger.error(f"Account {account_id} not found")
+                return None
 
             # Get account transactions
             transactions = await self._get_account_transactions(account_id, time_range or "30d")

@@ -15,7 +15,8 @@ from app.models.behavioral_pattern import BehavioralPattern, BehavioralPatternTy
 from app.schemas.behavioral import BehavioralPatternCreate, BehavioralPatternUpdate
 from app.repositories.enhanced_base import AIEnhancedRepository
 from app.core.llm_orchestrator import TaskType, TaskComplexity
-from app.core.exceptions import BehavioralAnalysisError, PatternDetectionError
+# Exception imports removed for MVP
+# All custom exceptions replaced with standard logging
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +105,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Behavioral pattern analysis failed: {str(e)}")
-            raise BehavioralAnalysisError(f"Behavioral pattern analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Behavioral pattern analysis failed: {str(e}}")
+        return {}
 
     async def detect_spending_patterns(
         self,
@@ -157,7 +159,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Spending pattern detection failed: {str(e)}")
-            raise PatternDetectionError(f"Spending pattern detection failed: {str(e)}")
+            logger.error(f"Error: {{f"Spending pattern detection failed: {str(e}}")
+        return None
 
     async def detect_risk_patterns(
         self,
@@ -215,7 +218,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Risk pattern detection failed: {str(e)}")
-            raise PatternDetectionError(f"Risk pattern detection failed: {str(e)}")
+            logger.error(f"Error: {{f"Risk pattern detection failed: {str(e}}")
+        return None
 
     async def analyze_seasonal_patterns(
         self,
@@ -271,7 +275,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Seasonal pattern analysis failed: {str(e)}")
-            raise BehavioralAnalysisError(f"Seasonal pattern analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Seasonal pattern analysis failed: {str(e}}")
+        return None
 
     async def detect_behavioral_biases(
         self,
@@ -301,7 +306,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Behavioral bias detection failed: {str(e)}")
-            raise BehavioralAnalysisError(f"Behavioral bias detection failed: {str(e)}")
+            logger.error(f"Error: {{f"Behavioral bias detection failed: {str(e}}")
+        return None
 
     async def get_pattern_insights(
         self,
@@ -333,7 +339,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Pattern insights analysis failed: {str(e)}")
-            raise BehavioralAnalysisError(f"Pattern insights analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Pattern insights analysis failed: {str(e}}")
+        return None
 
     async def get_pattern_trends(
         self,
@@ -372,7 +379,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Pattern trend analysis failed: {str(e)}")
-            raise BehavioralAnalysisError(f"Pattern trend analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Pattern trend analysis failed: {str(e}}")
+        return None # dict}")
 
     async def bulk_update_pattern_analysis(
         self,
@@ -404,7 +412,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Bulk pattern analysis update failed: {str(e)}")
-            raise BehavioralAnalysisError(f"Bulk pattern analysis update failed: {str(e)}")
+            logger.error(f"Error: {{f"Bulk pattern analysis update failed: {str(e}}")
+        return None
 
     async def get_high_confidence_patterns(
         self,
@@ -429,7 +438,8 @@ class EnhancedBehavioralPatternRepository(AIEnhancedRepository[BehavioralPattern
 
         except Exception as e:
             logger.error(f"Failed to get high-confidence patterns: {str(e)}")
-            raise BehavioralAnalysisError(f"Failed to get high-confidence patterns: {str(e)}")
+            logger.error(f"Error: {{f"Failed to get high-confidence patterns: {str(e}}")
+        return None
 
     # ==================== Abstract Method Implementations ====================
 

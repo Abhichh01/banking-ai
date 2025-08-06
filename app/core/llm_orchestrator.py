@@ -69,7 +69,7 @@ class LLMOrchestrator:
                 },
                 "cost_per_token": 0.00001,
                 "max_tokens": 128000,
-                "api_key": settings.OPENAI_API_KEY,
+                "api_key": settings.API_KEY,
             },
             "claude-3-sonnet-20240229": {
                 "provider": "anthropic",
@@ -81,7 +81,7 @@ class LLMOrchestrator:
                 },
                 "cost_per_token": 0.000015,
                 "max_tokens": 200000,
-                "api_key": settings.ANTHROPIC_API_KEY,
+                "api_key": settings.CLAUDE_OPUS_MODEL_NAME,
             },
             "llama-3-70b": {
                 "provider": "local",

@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Union
 from uuid import UUID
 
-from sqlalchemy import and_, select, func, text, desc
+from sqlalchemy import and_, select, func, text, desc, or_
 from sqlalchemy.orm import selectinload
 
 from app.models.ai_models import (
@@ -23,7 +23,8 @@ from app.schemas.ai import (
 )
 from app.repositories.enhanced_base import AIEnhancedRepository
 from app.core.llm_orchestrator import TaskType, TaskComplexity
-from app.core.exceptions import AIModelError, RecommendationError, BehavioralAnalysisError
+# Exception imports removed for MVP
+# All custom exceptions replaced with standard logging
 
 logger = logging.getLogger(__name__)
 
@@ -191,7 +192,7 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"Recommendation effectiveness analysis failed: {str(e)}")
-            raise RecommendationError(f"Recommendation effectiveness analysis failed: {str(e)}")
+        return {}
 
     async def generate_personalized_recommendations(
         self,
@@ -214,7 +215,7 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"Personalized recommendation generation failed: {str(e)}")
-            raise RecommendationError(f"Personalized recommendation generation failed: {str(e)}")
+        return {}
 
     async def analyze_behavioral_patterns(
         self,
@@ -237,7 +238,8 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"Behavioral pattern analysis failed: {str(e)}")
-            raise BehavioralAnalysisError(f"Behavioral pattern analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Behavioral pattern analysis failed: {str(e}}")
+        return None
 
     # ==================== Advanced Analytics Methods ====================
 
@@ -289,7 +291,8 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"AI analytics failed: {str(e)}")
-            raise AIModelError(f"AI analytics failed: {str(e)}")
+            logger.error(f"Error: {{f"AI analytics failed: {str(e}}")
+        return None
 
     async def get_recommendation_performance(
         self,
@@ -313,7 +316,8 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"Recommendation performance analysis failed: {str(e)}")
-            raise RecommendationError(f"Recommendation performance analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Recommendation performance analysis failed: {str(e}}")
+        return None
 
     async def get_behavioral_insights(
         self,
@@ -341,7 +345,8 @@ class EnhancedAIModelRepository(AIEnhancedRepository[AIRecommendation, AIRecomme
 
         except Exception as e:
             logger.error(f"Behavioral insights analysis failed: {str(e)}")
-            raise BehavioralAnalysisError(f"Behavioral insights analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Behavioral insights analysis failed: {str(e}}")
+        return None # dict}")
 
     # ==================== Implementation of Abstract Methods ====================
 

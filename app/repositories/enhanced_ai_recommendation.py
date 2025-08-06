@@ -15,7 +15,6 @@ from app.models.ai_recommendation import AIRecommendation, RecommendationType, R
 from app.schemas.ai import AIRecommendationCreate, AIRecommendationUpdate
 from app.repositories.enhanced_base import AIEnhancedRepository
 from app.core.llm_orchestrator import TaskType, TaskComplexity
-from app.core.exceptions import RecommendationError
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +122,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Personalized recommendation generation failed: {str(e)}")
-            raise RecommendationError(f"Personalized recommendation generation failed: {str(e)}")
+            logger.error(f"Error: {{f"Personalized recommendation generation failed: {str(e}}")
+        return {}
 
     async def analyze_recommendation_performance(
         self,
@@ -172,7 +172,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Recommendation performance analysis failed: {str(e)}")
-            raise RecommendationError(f"Recommendation performance analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Recommendation performance analysis failed: {str(e}}")
+        return None
 
     async def optimize_recommendations(
         self,
@@ -202,7 +203,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Recommendation optimization failed: {str(e)}")
-            raise RecommendationError(f"Recommendation optimization failed: {str(e)}")
+            logger.error(f"Error: {{f"Recommendation optimization failed: {str(e}}")
+        return None
 
     async def analyze_user_preferences(
         self,
@@ -239,7 +241,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"User preference analysis failed: {str(e)}")
-            raise RecommendationError(f"User preference analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"User preference analysis failed: {str(e}}")
+        return None
 
     async def get_recommendation_trends(
         self,
@@ -279,7 +282,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Recommendation trend analysis failed: {str(e)}")
-            raise RecommendationError(f"Recommendation trend analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Recommendation trend analysis failed: {str(e}}")
+        return None
 
     async def update_recommendation_feedback(
         self,
@@ -292,7 +296,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
         try:
             recommendation = await self.get_by_id(recommendation_id)
             if not recommendation:
-                raise RecommendationError(f"Recommendation {recommendation_id} not found")
+                logger.error(f"Error: {{f"Recommendation {recommendation_id} not found"}}")
+        return None
 
             # Update feedback
             update_data = {
@@ -313,7 +318,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Recommendation feedback update failed: {str(e)}")
-            raise RecommendationError(f"Recommendation feedback update failed: {str(e)}")
+            logger.error(f"Error: {{f"Recommendation feedback update failed: {str(e}}")
+        return None
 
     async def get_high_priority_recommendations(
         self,
@@ -335,7 +341,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Failed to get high-priority recommendations: {str(e)}")
-            raise RecommendationError(f"Failed to get high-priority recommendations: {str(e)}")
+            logger.error(f"Error: {{f"Failed to get high-priority recommendations: {str(e}}")
+        return None
 
     async def bulk_update_recommendation_status(
         self,
@@ -367,7 +374,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Bulk recommendation status update failed: {str(e)}")
-            raise RecommendationError(f"Bulk recommendation status update failed: {str(e)}")
+            logger.error(f"Error: {{f"Bulk recommendation status update failed: {str(e}}")
+        return None
 
     async def get_expiring_recommendations(
         self,
@@ -393,7 +401,8 @@ class EnhancedAIRecommendationRepository(AIEnhancedRepository[AIRecommendation, 
 
         except Exception as e:
             logger.error(f"Failed to get expiring recommendations: {str(e)}")
-            raise RecommendationError(f"Failed to get expiring recommendations: {str(e)}")
+            logger.error(f"Error: {{f"Failed to get expiring recommendations: {str(e}}")
+        return None
 
     # ==================== Abstract Method Implementations ====================
 

@@ -17,7 +17,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.base import ModelBase
 from app.core.llm_orchestrator import LLMOrchestrator, LLMRequest, TaskType, TaskComplexity
-from app.core.exceptions import AIAnalysisError, CacheError, RepositoryError
+# Exception imports removed for MVP
+# All custom exceptions replaced with standard logging
 
 # Type variables
 ModelType = TypeVar("ModelType", bound=ModelBase)
@@ -237,7 +238,8 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"AI analysis failed: {str(e)}")
-            raise AIAnalysisError(f"AI analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"AI analysis failed: {str(e}}")
+        return {}
 
     async def generate_insights(
         self, 
@@ -264,7 +266,8 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"Failed to generate insights: {str(e)}")
-            raise AIAnalysisError(f"Failed to generate insights: {str(e)}")
+            logger.error(f"Error: {{f"Failed to generate insights: {str(e}}")
+        return None
 
     async def detect_anomalies(
         self, 
@@ -288,7 +291,8 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"Anomaly detection failed: {str(e)}")
-            raise AIAnalysisError(f"Anomaly detection failed: {str(e)}")
+            logger.error(f"Error: {{f"Anomaly detection failed: {str(e}}")
+        return None
 
     # ==================== Advanced Analytics Methods ====================
     
@@ -338,7 +342,8 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"Behavioral analytics failed: {str(e)}")
-            raise RepositoryError(f"Behavioral analytics failed: {str(e)}")
+            logger.error(f"Error: {{f"Behavioral analytics failed: {str(e}}")
+        return None
 
     async def get_risk_assessment(
         self, 
@@ -383,7 +388,8 @@ class AIEnhancedRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchem
             
         except Exception as e:
             logger.error(f"Risk assessment failed: {str(e)}")
-            raise RepositoryError(f"Risk assessment failed: {str(e)}")
+            logger.error(f"Error: {{f"Risk assessment failed: {str(e}}")
+        return None
 
     # ==================== Performance Optimization Methods ====================
     

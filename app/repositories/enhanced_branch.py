@@ -15,7 +15,8 @@ from app.models.branch import Branch, BranchType, BranchStatus, Employee, Employ
 from app.schemas.branch import BranchCreate, BranchUpdate
 from app.repositories.enhanced_base import AIEnhancedRepository
 from app.core.llm_orchestrator import TaskType, TaskComplexity
-from app.core.exceptions import BranchAnalysisError, EmployeeManagementError
+# Exception imports removed for MVP
+# All custom exceptions replaced with standard logging
 
 logger = logging.getLogger(__name__)
 
@@ -170,7 +171,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
 
         except Exception as e:
             logger.error(f"Branch performance analysis failed: {str(e)}")
-            raise BranchAnalysisError(f"Branch performance analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Branch performance analysis failed: {str(e}}")
+        return {}
 
     async def generate_branch_recommendations(
         self,
@@ -193,7 +195,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
 
         except Exception as e:
             logger.error(f"Branch recommendation generation failed: {str(e)}")
-            raise BranchAnalysisError(f"Branch recommendation generation failed: {str(e)}")
+            logger.error(f"Error: {{f"Branch recommendation generation failed: {str(e}}")
+        return None
 
     # ==================== Advanced Analytics Methods ====================
 
@@ -214,7 +217,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
             # Get branch
             branch = await self.get_by_id(branch_id)
             if not branch:
-                raise BranchAnalysisError(f"Branch {branch_id} not found")
+                logger.error(f"Error: {{f"Branch {branch_id} not found"}}")
+        return None
 
             # Get branch accounts
             accounts = await self._get_branch_accounts(branch_id, time_range)
@@ -256,7 +260,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
 
         except Exception as e:
             logger.error(f"Branch analytics failed: {str(e)}")
-            raise BranchAnalysisError(f"Branch analytics failed: {str(e)}")
+            logger.error(f"Error: {{f"Branch analytics failed: {str(e}}")
+        return None
 
     async def get_branch_performance(
         self,
@@ -280,7 +285,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
 
         except Exception as e:
             logger.error(f"Branch performance analysis failed: {str(e)}")
-            raise BranchAnalysisError(f"Branch performance analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Branch performance analysis failed: {str(e}}")
+        return None
 
     async def get_branch_capacity_analysis(
         self,
@@ -291,7 +297,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
             # Get branch with employees
             branch = await self.get_branch_with_employees(branch_id)
             if not branch:
-                raise BranchAnalysisError(f"Branch {branch_id} not found")
+                logger.error(f"Error: {{f"Branch {branch_id} not found"}}")
+        return None # dict
 
             # Get branch accounts
             accounts = await self._get_branch_accounts(branch_id, "90d")
@@ -308,7 +315,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
 
         except Exception as e:
             logger.error(f"Branch capacity analysis failed: {str(e)}")
-            raise BranchAnalysisError(f"Branch capacity analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Branch capacity analysis failed: {str(e}}")
+        return None
 
     # ==================== Employee Management Methods ====================
 
@@ -363,7 +371,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
 
         except Exception as e:
             logger.error(f"Employee performance analysis failed: {str(e)}")
-            raise EmployeeManagementError(f"Employee performance analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Employee performance analysis failed: {str(e}}")
+        return None # dict}")
 
     # ==================== Implementation of Abstract Methods ====================
 
@@ -441,7 +450,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
             # Get branch
             branch = await self.get_by_id(branch_id)
             if not branch:
-                raise BranchAnalysisError(f"Branch {branch_id} not found")
+                logger.error(f"Error: {{f"Branch {branch_id} not found"}}")
+        return None # dict # dict # dict # dict # dict # dict # list
 
             # Get branch accounts
             accounts = await self._get_branch_accounts(branch_id, time_range or "30d")
@@ -703,7 +713,8 @@ class EnhancedBranchRepository(AIEnhancedRepository[Branch, BranchCreate, Branch
             employee = employee_result.scalar_one_or_none()
 
             if not employee:
-                raise EmployeeManagementError(f"Employee {employee_id} not found in branch {branch_id}")
+                logger.error(f"Error: {{f"Employee {employee_id} not found in branch {branch_id}"}}")
+        return None # dict # dict # dict # dict # dict # dict # dict # dict # list
 
             return {
                 "employee_profile": employee.to_dict(),

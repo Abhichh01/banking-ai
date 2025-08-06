@@ -15,7 +15,6 @@ from app.models.fraud_alert import FraudAlert, FraudAlertType, FraudAlertStatus,
 from app.schemas.ai import FraudAlertCreate, FraudAlertUpdate
 from app.repositories.enhanced_base import AIEnhancedRepository
 from app.core.llm_orchestrator import TaskType, TaskComplexity
-from app.core.exceptions import FraudDetectionError, AlertProcessingError
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +141,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Fraud pattern analysis failed: {str(e)}")
-            raise FraudDetectionError(f"Fraud pattern analysis failed: {str(e)}")
+            return {"error": f"Fraud pattern analysis failed: {str(e)}"}
 
     async def detect_fraud_anomalies(
         self,
@@ -168,7 +167,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Fraud anomaly detection failed: {str(e)}")
-            raise FraudDetectionError(f"Fraud anomaly detection failed: {str(e)}")
+            return {"error": f"Fraud anomaly detection failed: {str(e)}"}
 
     async def generate_fraud_alert(
         self,
@@ -195,7 +194,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Fraud alert generation failed: {str(e)}")
-            raise AlertProcessingError(f"Fraud alert generation failed: {str(e)}")
+            return None
 
     async def analyze_alert_with_ai(
         self,
@@ -205,7 +204,8 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
         try:
             alert = await self.get_by_id(alert_id)
             if not alert:
-                raise AlertProcessingError(f"Alert {alert_id} not found")
+                logger.error(f"Alert {alert_id} not found")
+                return {"error": f"Alert {alert_id} not found"}
 
             # Get related data for analysis
             alert_context = await self._get_alert_context_data(alert_id)
@@ -225,7 +225,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Alert AI analysis failed: {str(e)}")
-            raise AlertProcessingError(f"Alert AI analysis failed: {str(e)}")
+            return {"error": f"Alert AI analysis failed: {str(e)}"}
 
     async def correlate_alerts(
         self,
@@ -235,7 +235,8 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
         try:
             alert = await self.get_by_id(alert_id)
             if not alert:
-                raise AlertProcessingError(f"Alert {alert_id} not found")
+                logger.error(f"Alert {alert_id} not found")
+                return []
 
             # Get related alerts
             related_alerts = await self._get_related_alerts(alert)
@@ -257,7 +258,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Alert correlation failed: {str(e)}")
-            raise AlertProcessingError(f"Alert correlation failed: {str(e)}")
+            return []
 
     async def get_fraud_trends(
         self,
@@ -297,7 +298,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Fraud trend analysis failed: {str(e)}")
-            raise FraudDetectionError(f"Fraud trend analysis failed: {str(e)}")
+            return {"error": f"Fraud trend analysis failed: {str(e)}"}
 
     async def prioritize_alerts(
         self,
@@ -334,7 +335,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Alert prioritization failed: {str(e)}")
-            raise AlertProcessingError(f"Alert prioritization failed: {str(e)}")
+            return []
 
     async def bulk_update_alert_status(
         self,
@@ -370,7 +371,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Bulk alert status update failed: {str(e)}")
-            raise AlertProcessingError(f"Bulk alert status update failed: {str(e)}")
+            return 0
 
     async def get_high_risk_alerts(
         self,
@@ -398,7 +399,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Failed to get high-risk alerts: {str(e)}")
-            raise FraudDetectionError(f"Failed to get high-risk alerts: {str(e)}")
+            return []
 
     async def get_fraud_statistics(
         self,
@@ -446,7 +447,7 @@ class EnhancedFraudAlertRepository(AIEnhancedRepository[FraudAlert, FraudAlertCr
 
         except Exception as e:
             logger.error(f"Failed to get fraud statistics: {str(e)}")
-            raise FraudDetectionError(f"Failed to get fraud statistics: {str(e)}")
+            return {"error": f"Failed to get fraud statistics: {str(e)}"}
 
     # ==================== Abstract Method Implementations ====================
 

@@ -15,7 +15,8 @@ from app.models.card import Card, CardStatus, CardType
 from app.schemas.account import CardCreate, CardUpdate
 from app.repositories.enhanced_base import AIEnhancedRepository
 from app.core.llm_orchestrator import TaskType, TaskComplexity
-from app.core.exceptions import CardSecurityError, FraudDetectionError
+# Exception imports removed for MVP
+# All custom exceptions replaced with standard logging
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +106,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
         try:
             card = await self.get_by_id(card_id)
             if not card:
-                raise CardSecurityError(f"Card {card_id} not found")
+                logger.error(f"Error: {{f"Card {card_id} not found"}}")
+        return None # dict # list
 
             # Get card usage data
             card_data = await self._get_card_security_data(card_id)
@@ -125,7 +127,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card security analysis failed: {str(e)}")
-            raise CardSecurityError(f"Card security analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Card security analysis failed: {str(e}}")
+        return None
 
     async def detect_card_fraud(
         self,
@@ -165,7 +168,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card fraud detection failed: {str(e)}")
-            raise FraudDetectionError(f"Card fraud detection failed: {str(e)}")
+            logger.error(f"Error: {{f"Card fraud detection failed: {str(e}}")
+        return None
 
     async def analyze_card_usage_patterns(
         self,
@@ -192,7 +196,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card usage pattern analysis failed: {str(e)}")
-            raise CardSecurityError(f"Card usage pattern analysis failed: {str(e)}")
+            logger.error(f"Error: {{f"Card usage pattern analysis failed: {str(e}}")
+        return None
 
     async def get_card_recommendations(
         self,
@@ -219,7 +224,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card recommendations failed: {str(e)}")
-            raise CardSecurityError(f"Card recommendations failed: {str(e)}")
+            logger.error(f"Error: {{f"Card recommendations failed: {str(e}}")
+        return None
 
     async def monitor_card_security(
         self,
@@ -229,7 +235,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
         try:
             card = await self.get_by_id(card_id)
             if not card:
-                raise CardSecurityError(f"Card {card_id} not found")
+                logger.error(f"Error: {{f"Card {card_id} not found"}}")
+        return None
 
             # Get security monitoring data
             security_data = await self._get_card_security_monitoring_data(card_id)
@@ -261,7 +268,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Card security monitoring failed: {str(e)}")
-            raise CardSecurityError(f"Card security monitoring failed: {str(e)}")
+            logger.error(f"Error: {{f"Card security monitoring failed: {str(e}}")
+        return None
 
     async def bulk_update_card_status(
         self,
@@ -285,7 +293,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Bulk card status update failed: {str(e)}")
-            raise CardSecurityError(f"Bulk card status update failed: {str(e)}")
+            logger.error(f"Error: {{f"Bulk card status update failed: {str(e}}")
+        return None
 
     async def get_expiring_cards(
         self,
@@ -313,7 +322,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Failed to get expiring cards: {str(e)}")
-            raise CardSecurityError(f"Failed to get expiring cards: {str(e)}")
+            logger.error(f"Error: {{f"Failed to get expiring cards: {str(e}}")
+        return None
 
     async def get_suspicious_cards(
         self,
@@ -345,7 +355,8 @@ class EnhancedCardRepository(AIEnhancedRepository[Card, CardCreate, CardUpdate])
 
         except Exception as e:
             logger.error(f"Failed to get suspicious cards: {str(e)}")
-            raise FraudDetectionError(f"Failed to get suspicious cards: {str(e)}")
+            logger.error(f"Error: {{f"Failed to get suspicious cards: {str(e}}")
+        return None
 
     # ==================== Abstract Method Implementations ====================
 

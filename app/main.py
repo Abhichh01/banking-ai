@@ -259,9 +259,7 @@ def start() -> None:
     """Start the application using uvicorn."""
     uvicorn.run(
         "app.main:app",
-        host=settings.HOST,
-        port=settings.PORT,
-        reload=settings.DEBUG,
+        reload=True,
         workers=1,  # Simplified for MVP
         log_level=settings.LOG_LEVEL.lower()
     )

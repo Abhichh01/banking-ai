@@ -17,7 +17,8 @@ class Settings(BaseSettings):
     API_V1_STR: str 
     PROJECT_NAME: str 
     API_VERSION: str 
-    DEBUG: bool = False
+    
+    DEBUG: bool = True
     ENVIRONMENT: str = "development"
     SECRET_KEY: str = "your-secret-key-here"  # Change in production
     
@@ -25,10 +26,6 @@ class Settings(BaseSettings):
     CORS_ORIGINS: List[str] = ["*"]
     CORS_ORIGIN_REGEX: str = ""
     ALLOWED_HOSTS: List[str] = ["*"]
-    
-    # Server Configuration
-    HOST: str = "0.0.0.0"
-    PORT: int = 8000
     
     
     # Database Configuration (Azure SQL)

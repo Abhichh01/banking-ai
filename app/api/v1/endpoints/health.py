@@ -26,7 +26,7 @@ async def health_check() -> HealthCheck:
     """
     return HealthCheck(
         status="healthy",
-        version=settings.VERSION,
+        version=settings.API_VERSION,
         timestamp=datetime.utcnow().isoformat(),
         environment=settings.ENVIRONMENT,
         debug=settings.DEBUG

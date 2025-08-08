@@ -5,6 +5,7 @@ This module contains all API endpoints related to user management.
 """
 from typing import List, Optional
 from datetime import datetime
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,6 +16,8 @@ from app.schemas.user import User, UserCreate, UserUpdate, UserInDB
 from app.schemas.response import StandardResponse
 from app.core.llm_orchestrator import LLMOrchestrator
 from app.core.memory_manager import MemoryManager
+
+logger = logging.getLogger(__name__)
 
 # Create router
 router = APIRouter()
@@ -53,9 +56,8 @@ async def create_user(
         await user_repo.db_session.commit()
         
         return user
-    except HTTPException:
-        raise
     except Exception as e:
+        logger.exception("Error creating user")
         await user_repo.db_session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -76,6 +78,7 @@ async def read_users(
         users, _ = await user_repo.get_multi(skip=skip, limit=limit)
         return users
     except Exception as e:
+        logger.exception("Error retrieving users")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error retrieving users: {str(e)}"
@@ -115,9 +118,8 @@ async def read_user(
             )
         
         return user
-    except HTTPException:
-        raise
     except Exception as e:
+        logger.exception("Error retrieving user")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error retrieving user: {str(e)}"
@@ -159,9 +161,8 @@ async def update_user(
         await user_repo.db_session.commit()
         
         return updated_user
-    except HTTPException:
-        raise
     except Exception as e:
+        logger.exception("Error updating user")
         await user_repo.db_session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -193,9 +194,8 @@ async def delete_user(
         await user_repo.db_session.commit()
         
         return {"success": True, "message": "User deleted successfully"}
-    except HTTPException:
-        raise
     except Exception as e:
+        logger.exception("Error deleting user")
         await user_repo.db_session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
